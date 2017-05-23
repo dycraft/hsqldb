@@ -1663,6 +1663,7 @@ public class ParserCommand extends ParserDDL {
             }
         }
 
+
         if (!readonly && level == 1) {
             throw unexpectedToken(Tokens.T_WRITE);
         }

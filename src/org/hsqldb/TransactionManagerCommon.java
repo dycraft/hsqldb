@@ -104,7 +104,7 @@ class TransactionManagerCommon {
                         throw Error.error(ErrorCode.X_25001);
                     }
             }
-
+            //切换锁
             switch (mode) {
 
                 case TransactionManager.MVCC : {
@@ -585,7 +585,7 @@ class TransactionManagerCommon {
         if (session.abortTransaction) {
             return false;
         }
-
+        //写的表
         HsqlName[] nameList = cs.getTableNamesForWrite();
 
         for (int i = 0; i < nameList.length; i++) {
@@ -611,13 +611,30 @@ class TransactionManagerCommon {
                 }
             }
         }
-
+        //读取的表
         nameList = cs.getTableNamesForRead();
 
         if (txModel == TransactionManager.MVLOCKS && session.isReadOnly()) {
             nameList = catalogNameList;
         }
 
+        if (session.isolationLevel != SessionInterface.TX_READ_UNCOMMITTED) {
+            for (int i = 0; i < nameList.length; i++) {
+                HsqlName name = nameList[i];
+
+                if (name.schema == SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
+                    continue;
+                }
+
+                Session holder = (Session) tableWriteLocks.get(name);
+
+                if (holder != null && holder != session) {
+                    session.tempSet.add(holder);
+                }
+            }
+        }
+
+        /*before
         for (int i = 0; i < nameList.length; i++) {
             HsqlName name = nameList[i];
 
@@ -630,7 +647,7 @@ class TransactionManagerCommon {
             if (holder != null && holder != session) {
                 session.tempSet.add(holder);
             }
-        }
+        }*/
 
         if (session.tempSet.isEmpty()) {
             return true;

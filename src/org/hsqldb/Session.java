@@ -250,9 +250,10 @@ public class Session implements SessionInterface {
 
     public synchronized void setIsolationDefault(int level) {
 
+        /*before
         if (level == SessionInterface.TX_READ_UNCOMMITTED) {
             level = SessionInterface.TX_READ_COMMITTED;
-        }
+        }*/
 
         if (level == isolationLevelDefault) {
             return;
@@ -262,8 +263,10 @@ public class Session implements SessionInterface {
 
         if (!isInMidTransaction()) {
             isolationLevel = isolationLevelDefault;
-            isReadOnlyIsolation = level
-                                  == SessionInterface.TX_READ_UNCOMMITTED;
+            isReadOnlyIsolation = false;
+                    //isReadOnlyIsolation = level
+                                  //== SessionInterface.TX_READ_UNCOMMITTED;
+                                  //== SessionInterface.TX_READ_UNCOMMITTED;
         }
     }
 
@@ -275,15 +278,17 @@ public class Session implements SessionInterface {
         if (isInMidTransaction()) {
             throw Error.error(ErrorCode.X_25001);
         }
-
+        /*before
         if (level == SessionInterface.TX_READ_UNCOMMITTED) {
             level = SessionInterface.TX_READ_COMMITTED;
         }
+        */
 
         if (isolationLevel != level) {
             isolationLevel = level;
-            isReadOnlyIsolation = level
-                                  == SessionInterface.TX_READ_UNCOMMITTED;
+            isReadOnlyIsolation = false;
+            //isReadOnlyIsolation = level
+                                  //== SessionInterface.TX_READ_UNCOMMITTED;
         }
     }
 
@@ -555,7 +560,7 @@ public class Session implements SessionInterface {
             sessionContext.isReadOnly = isReadOnlyDefault ? Boolean.TRUE
                                                           : Boolean.FALSE;
 
-            setIsolation(isolationLevelDefault);
+            //setIsolation(isolationLevelDefault);
 
             return;
         }
@@ -1273,7 +1278,7 @@ public class Session implements SessionInterface {
         sessionContext.currentStatement = cs;
 
         boolean isTX = cs.isTransactionStatement();
-
+        //没有其他事务直接执行
         if (!isTX) {
             actionTimestamp =
                 database.txManager.getNextGlobalChangeTimestamp();
@@ -1293,7 +1298,7 @@ public class Session implements SessionInterface {
 
             return r;
         }
-
+        //没有auto commit
         while (true) {
             actionIndex = rowActionList.size();
 
