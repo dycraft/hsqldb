@@ -50,5 +50,3 @@ build.properties
 junit*.properties
 IgnoreLexer.java~
 .gradle
-
-!benchmarksql/
