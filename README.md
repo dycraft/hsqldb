@@ -1,12 +1,17 @@
 # hsqldb
 
+hsqldb-2.3.0
+benchmarksql-4.1.1
+
 ## 如何测试
 
 [HSQLDB 官方测试地址](http://hsqldb.org/web/hsqlPerformanceTests.html)
 
 ### TPC-B
 
-位于工程根目录
+```sh
+cd <工程根目录>
+```
 
 #### 1. sheer speed of the multithreaded engine
 
