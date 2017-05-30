@@ -401,7 +401,10 @@ class TransactionManagerCommon {
         writeLock.lock();
 
         try {
-            unlockReadTablesTPL(session, readLocks);
+            if(session.isolationLevel == SessionInterface.TX_READ_UNCOMMITTED ||
+                    session.isolationLevel == SessionInterface.TX_READ_COMMITTED) {
+                unlockReadTablesTPL(session, readLocks);
+            }
 
             final int waitingCount = session.waitingSessions.size();
 

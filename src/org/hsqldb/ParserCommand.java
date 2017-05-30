@@ -137,7 +137,7 @@ public class ParserCommand extends ParserDDL {
             read();
         }
 
-        switch (token.tokenType) {
+         switch (token.tokenType) {
 
             // DQL
             case Tokens.WITH :
@@ -1663,11 +1663,11 @@ public class ParserCommand extends ParserDDL {
             }
         }
 
-
+        /*Before
         if (!readonly && level == 1) {
             throw unexpectedToken(Tokens.T_WRITE);
         }
-
+        */
         return args;
     }
 

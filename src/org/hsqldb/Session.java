@@ -618,7 +618,9 @@ public class Session implements SessionInterface {
             sessionContext.isReadOnly = isReadOnlyDefault ? Boolean.TRUE
                                                           : Boolean.FALSE;
 
+            /*before
             setIsolation(isolationLevelDefault);
+             */
         }
 
         Statement endTX = commit ? StatementSession.commitNoChainStatement
