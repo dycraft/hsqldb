@@ -622,17 +622,19 @@ class TransactionManagerCommon {
         }
 
         if (session.isolationLevel != SessionInterface.TX_READ_UNCOMMITTED) {
-            for (int i = 0; i < nameList.length; i++) {
-                HsqlName name = nameList[i];
+            if(cs.type != 50 || session.isolationLevel != SessionInterface.TX_REPEATABLE_READ) {
+                for (int i = 0; i < nameList.length; i++) {
+                    HsqlName name = nameList[i];
 
-                if (name.schema == SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
-                    continue;
-                }
+                    if (name.schema == SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
+                        continue;
+                    }
 
-                Session holder = (Session) tableWriteLocks.get(name);
+                    Session holder = (Session) tableWriteLocks.get(name);
 
-                if (holder != null && holder != session) {
-                    session.tempSet.add(holder);
+                    if (holder != null && holder != session) {
+                        session.tempSet.add(holder);
+                    }
                 }
             }
         }

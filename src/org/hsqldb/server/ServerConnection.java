@@ -1529,7 +1529,7 @@ class ServerConnection implements Runnable {
                 while (keepAlive) {
                     msgType = dataInput.readByte();
 
-up                    if (msgType < ResultConstants.MODE_UPPER_LIMIT) {
+                    if (msgType < ResultConstants.MODE_UPPER_LIMIT) {
                         receiveResult(msgType);
                     } else {
                         receiveOdbcPacket((char) msgType);
