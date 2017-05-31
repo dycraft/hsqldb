@@ -19,7 +19,8 @@ cd <工程根目录>
 - no logging
 
 ```java
-java -server -Xmx1536M out/production/hsqldb/org.hsqldb.test.TestBench -tps 40 -driver out/production/hsqldb/org.hsqldb.jdbcDriver -url jdbc:hsqldb:mem:test;hsqldb.tx=mvcc -user sa -init -clients 4 -tpc 8000
+cd out/production/hsqldb
+java -server -Xmx1536M org.hsqldb.test.TestBench -tps 40 -driver org.hsqldb.jdbcDriver -url jdbc:hsqldb:mem:test;hsqldb.tx=mvcc -user sa -init -clients 4 -tpc 8000
 ```
 
 #### 2. automatic checkpoints (memory)
@@ -28,7 +29,8 @@ java -server -Xmx1536M out/production/hsqldb/org.hsqldb.test.TestBench -tps 40 -
 - logs the statement
 
 ```java
-java -server -Xmx1536M out/production/hsqldb/org.hsqldb.test.TestBench -tps 40 -driver out/production/hsqldb/org.hsqldb.jdbcDriver -url jdbc:hsqldb:file:test;hsqldb.log_size=200;hsqldb.tx=mvcc -user sa -init -clients 4 -tpc 8000
+cd out/production/hsqldb
+java -server -Xmx1536M org.hsqldb.test.TestBench -tps 40 -driver org.hsqldb.jdbcDriver -url jdbc:hsqldb:file:test;hsqldb.log_size=200;hsqldb.tx=mvcc -user sa -init -clients 4 -tpc 8000
 ```
 
 #### 3. automatic checkpoints (cached)
@@ -37,7 +39,7 @@ java -server -Xmx1536M out/production/hsqldb/org.hsqldb.test.TestBench -tps 40 -
 - logs the statement
 
 ```java
-java -server -Xmx128M out/production/hsqldb/org.hsqldb.test.TestBench -tps 40 -driver out/production/hsqldb/org.hsqldb.jdbcDriver -url jdbc:hsqldb:file:test;hsqldb.default_table_type=cached;hsqldb.log_size=200;hsqldb.tx=mvcc -user sa -init -clients 4 -tpc 8000
+java -server -Xmx128M org.hsqldb.test.TestBench -tps 40 -driver org.hsqldb.jdbcDriver -url jdbc:hsqldb:file:test;hsqldb.default_table_type=cached;hsqldb.log_size=200;hsqldb.tx=mvcc -user sa -init -clients 4 -tpc 8000
 ```
 
 ### TPC-C
