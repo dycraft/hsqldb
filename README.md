@@ -42,6 +42,7 @@ java -server -Xmx128M out/productionorg.hsqldb.test.TestBench -tps 40 -driver ou
 
 ### TPC-C
 ```sh
+cp out/artifacts/hsqldb_jar/hsqldb.jar benchmarksql/lib/
 cd benchmarksql/run
 ./runSQL.sh hsql.properties sqlTableCreates
 ./runLoader.sh hsql.properties numWarehouses 1
