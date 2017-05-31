@@ -1,7 +1,7 @@
 # hsqldb
 
-hsqldb-2.3.0
-benchmarksql-4.1.1
+- hsqldb-2.3.0
+- benchmarksql-4.1.1
 
 ## 如何测试
 

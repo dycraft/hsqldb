@@ -50,3 +50,9 @@ build.properties
 junit*.properties
 IgnoreLexer.java~
 .gradle
+
+# Hsqldb
+*.tmp
+*.log
+*.properties
+*.script
