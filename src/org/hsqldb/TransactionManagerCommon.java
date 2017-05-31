@@ -603,14 +603,16 @@ class TransactionManagerCommon {
             if (holder != null && holder != session) {
                 session.tempSet.add(holder);
             }
+            /*NAIVE PHANTOM READ*/
+            if(cs.type != 50 || session.isolationLevel != SessionInterface.TX_REPEATABLE_READ) {
+                Iterator it = tableReadLocks.get(name);
 
-            Iterator it = tableReadLocks.get(name);
+                while (it.hasNext()) {
+                    holder = (Session) it.next();
 
-            while (it.hasNext()) {
-                holder = (Session) it.next();
-
-                if (holder != session) {
-                    session.tempSet.add(holder);
+                    if (holder != session) {
+                        session.tempSet.add(holder);
+                    }
                 }
             }
         }
@@ -622,21 +624,21 @@ class TransactionManagerCommon {
         }
 
         if (session.isolationLevel != SessionInterface.TX_READ_UNCOMMITTED) {
-            if(cs.type != 50 || session.isolationLevel != SessionInterface.TX_REPEATABLE_READ) {
-                for (int i = 0; i < nameList.length; i++) {
-                    HsqlName name = nameList[i];
 
-                    if (name.schema == SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
-                        continue;
-                    }
+            for (int i = 0; i < nameList.length; i++) {
+                HsqlName name = nameList[i];
 
-                    Session holder = (Session) tableWriteLocks.get(name);
+                if (name.schema == SqlInvariants.SYSTEM_SCHEMA_HSQLNAME) {
+                    continue;
+                }
 
-                    if (holder != null && holder != session) {
-                        session.tempSet.add(holder);
-                    }
+                Session holder = (Session) tableWriteLocks.get(name);
+
+                if (holder != null && holder != session) {
+                    session.tempSet.add(holder);
                 }
             }
+
         }
 
         /*before
