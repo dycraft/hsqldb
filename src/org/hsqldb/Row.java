@@ -32,6 +32,7 @@
 package org.hsqldb;
 
 import org.hsqldb.lib.LongLookup;
+import org.hsqldb.lib.OrderedHashSet;
 import org.hsqldb.persist.CachedObject;
 import org.hsqldb.persist.PersistentStore;
 import org.hsqldb.rowio.RowInputInterface;

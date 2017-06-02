@@ -128,6 +128,11 @@ class TransactionManagerCommon {
 
                     break;
                 }
+                case TransactionManager.ROWLOCKS : {
+                    manager = new TransactionManager2PLRow(database);
+
+                    break;
+                }
             }
 
             manager.globalChangeTimestamp.set(globalChangeTimestamp.get());

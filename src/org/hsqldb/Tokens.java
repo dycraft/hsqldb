@@ -686,6 +686,10 @@ public class Tokens {
     public static final String T_LOB                  = "LOB";
     public static final String T_LOCK                 = "LOCK";
     public static final String T_LOCKS                = "LOCKS";
+
+    //row
+    public static final String T_ROWLOCKS             = "ROWLOCKS";
+
     public static final String T_LONG                 = "LONG";
     public static final String T_LONGBLOB             = "LONGBLOB";
     public static final String T_LONGTEXT             = "LONGTEXT";
@@ -1778,6 +1782,9 @@ public class Tokens {
     public static final int X_MALFORMED_IDENTIFIER     = 883;
     public static final int X_MALFORMED_UNICODE_ESCAPE = 884;
 
+    //row
+    static final int ROWLOCKS          = 885;
+
     //
     public static final int X_UNKNOWN_TOKEN = -1;
     private static final IntValueHashMap reservedKeys =
@@ -2212,6 +2219,10 @@ public class Tokens {
         commandSet.put(T_LOB, LOB);
         commandSet.put(T_LOCK, LOCK);
         commandSet.put(T_LOCKS, LOCKS);
+
+        //row
+        commandSet.put(T_ROWLOCKS, ROWLOCKS);
+
         commandSet.put(T_LONG, LONG);
         commandSet.put(T_LONGBLOB, LONGBLOB);
         commandSet.put(T_LONGTEXT, LONGTEXT);

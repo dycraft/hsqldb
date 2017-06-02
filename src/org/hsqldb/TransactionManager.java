@@ -47,6 +47,7 @@ public interface TransactionManager {
     public int LOCKS   = 0;
     public int MVLOCKS = 1;
     public int MVCC    = 2;
+    public int ROWLOCKS = 3;
 
     //
     public int ACTION_READ = 0;
@@ -91,6 +92,8 @@ public interface TransactionManager {
     public boolean isMVRows();
 
     public boolean isMVCC();
+
+    public boolean isRowLocks();
 
     public boolean prepareCommitActions(Session session);
 

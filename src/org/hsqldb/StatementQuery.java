@@ -65,7 +65,7 @@ public class StatementQuery extends StatementDMQL {
 
         Result result = queryExpression.getResult(session,
             session.getMaxRows());
-
+        //simply set cs
         result.setStatement(this);
 
         return result;

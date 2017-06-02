@@ -1393,7 +1393,7 @@ public class QuerySpecification extends QueryExpression {
 
 //todo single row
         Result r = getSingleResult(session, maxrows);
-
+        //put bach nav
         r.getNavigator().reset();
 
         return r;
@@ -1402,13 +1402,14 @@ public class QuerySpecification extends QueryExpression {
     private Result getSingleResult(Session session, int maxRows) {
 
         int[] limits = sortAndSlice.getLimits(session, this, maxRows);
+        //get result
         Result              r         = buildResult(session, limits);
         RowSetNavigatorData navigator = (RowSetNavigatorData) r.getNavigator();
-
+        //for distinct
         if (isDistinctSelect) {
             navigator.removeDuplicates(session);
         }
-
+        //for order
         if (sortAndSlice.hasOrder()) {
             navigator.sortOrder(session);
         }
@@ -1496,6 +1497,7 @@ public class QuerySpecification extends QueryExpression {
 
             RangeIterator it = rangeIterators[currentIndex];
 
+
             if (it.next()) {
                 if (currentIndex < rangeVariables.length - 1) {
                     currentIndex++;
@@ -1512,6 +1514,28 @@ public class QuerySpecification extends QueryExpression {
 
             if (limitCount == 0) {
                 break;
+            }
+            //若是2pl行级锁，加锁
+            //row
+            if(session.getDatabase().txManager.isRowLocks() && session.isolationLevel != SessionInterface.TX_SERIALIZABLE){
+                Row lockingRow = it.getCurrentRow();
+
+                if(lockingRow != null) {
+                    TransactionManager2PLRow txManagerRow = (TransactionManager2PLRow) session.getDatabase().txManager;
+                    txManagerRow.beginActionRow(session, lockingRow.getId(), session.sessionContext.currentStatement, 0);
+
+                    session.timeoutManager.startTimeout(session.cmdTimeout);
+                    try {
+                        session.latch.await();
+                    } catch (InterruptedException e) {
+                        session.abortTransaction = true;
+                    }
+                    boolean abort = session.timeoutManager.endTimeout();
+
+                    if (abort) {
+                        session.abortTransaction = true;
+                    }
+                }
             }
 
             session.sessionData.startRowProcessing();
@@ -1562,6 +1586,16 @@ public class QuerySpecification extends QueryExpression {
                 navigator.add(data);
             } else if (isAggregated) {
                 navigator.update(groupData, data);
+            }
+
+            //row
+            //结束action
+            if(session.getDatabase().txManager.isRowLocks() && session.isolationLevel != SessionInterface.TX_SERIALIZABLE) {
+                Row lockingRow = it.getCurrentRow();
+                if(lockingRow != null) {
+                    TransactionManager2PLRow txManagerRow = (TransactionManager2PLRow) session.getDatabase().txManager;
+                    txManagerRow.endActionTPLRow(session, lockingRow.getId(), 0);
+                }
             }
 
             int rowCount = navigator.getSize();

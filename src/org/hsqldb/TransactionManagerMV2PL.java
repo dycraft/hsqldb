@@ -75,6 +75,10 @@ implements TransactionManager {
         return false;
     }
 
+    //row
+    public boolean isRowLocks() {return false; }
+
+
     public int getTransactionControl() {
         return MVLOCKS;
     }

@@ -87,6 +87,9 @@ implements TransactionManager {
     public boolean isMVCC() {
         return true;
     }
+    //row
+    public boolean isRowLocks() {return false; }
+
 
     public int getTransactionControl() {
         return MVCC;

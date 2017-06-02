@@ -64,6 +64,8 @@ implements TransactionManager {
     public boolean isMVCC() {
         return false;
     }
+    //row
+    public boolean isRowLocks() {return false; }
 
     public int getTransactionControl() {
         return LOCKS;
@@ -110,6 +112,7 @@ implements TransactionManager {
             adjustLobUsage(session);
             persistCommit(session);
             endTransactionTPL(session);
+
         } finally {
             writeLock.unlock();
         }

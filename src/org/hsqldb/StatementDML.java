@@ -511,6 +511,26 @@ public class StatementDML extends StatementDMQL {
             session.sessionData.startRowProcessing();
 
             Row      row  = it.getCurrentRow();
+            //row
+            if(session.getDatabase().txManager.isRowLocks() && session.isolationLevel != SessionInterface.TX_SERIALIZABLE){
+                if(row != null) {
+                    TransactionManager2PLRow txManagerRow = (TransactionManager2PLRow) session.getDatabase().txManager;
+                    txManagerRow.beginActionRow(session, row.getId(), session.sessionContext.currentStatement, 1);
+
+                    session.timeoutManager.startTimeout(session.cmdTimeout);
+                    try {
+                        session.latch.await();
+                    } catch (InterruptedException e) {
+                        session.abortTransaction = true;
+                    }
+                    boolean abort = session.timeoutManager.endTimeout();
+
+                    if (abort) {
+                        session.abortTransaction = true;
+                    }
+                }
+            }
+
             Object[] data = row.getData();
             Object[] newData = getUpdatedData(session, targets, baseTable,
                                               updateColumnMap, colExpressions,
@@ -1044,7 +1064,7 @@ public class StatementDML extends StatementDMQL {
         }
 
         navigator.beforeFirst();
-
+        //update 删除
         while (navigator.next()) {
             Row             row          = navigator.getCurrentRow();
             Table           currentTable = ((Table) row.getTable());
@@ -1055,7 +1075,7 @@ public class StatementDML extends StatementDMQL {
         }
 
         navigator.beforeFirst();
-
+        //update 插入
         while (navigator.next()) {
             Row             row          = navigator.getCurrentRow();
             Object[]        data         = navigator.getCurrentChangedData();
@@ -1157,6 +1177,26 @@ public class StatementDML extends StatementDMQL {
         while (it.next()) {
             Row currentRow = it.getCurrentRow();
 
+            //row
+            if(session.getDatabase().txManager.isRowLocks() && session.isolationLevel != SessionInterface.TX_SERIALIZABLE){
+                if(currentRow != null) {
+                    TransactionManager2PLRow txManagerRow = (TransactionManager2PLRow) session.getDatabase().txManager;
+                    txManagerRow.beginActionRow(session, currentRow.getId(), session.sessionContext.currentStatement, 1);
+
+                    session.timeoutManager.startTimeout(session.cmdTimeout);
+                    try {
+                        session.latch.await();
+                    } catch (InterruptedException e) {
+                        session.abortTransaction = true;
+                    }
+                    boolean abort = session.timeoutManager.endTimeout();
+
+                    if (abort) {
+                        session.abortTransaction = true;
+                    }
+                }
+            }
+
             rowset.addRow(currentRow);
 
             session.sessionContext.rownum++;
@@ -1204,9 +1244,30 @@ public class StatementDML extends StatementDMQL {
         try {
             while (it.hasNext()) {
                 Row row = it.getNextRow();
+                //row
+                if(session.getDatabase().txManager.isRowLocks() && session.isolationLevel != SessionInterface.TX_SERIALIZABLE){
+                    if(row != null) {
+                        TransactionManager2PLRow txManagerRow = (TransactionManager2PLRow) session.getDatabase().txManager;
+                        txManagerRow.beginActionRow(session, row.getId(), session.sessionContext.currentStatement, 1);
+
+                        session.timeoutManager.startTimeout(session.cmdTimeout);
+                        try {
+                            session.latch.await();
+                        } catch (InterruptedException e) {
+                            session.abortTransaction = true;
+                        }
+                        boolean abort = session.timeoutManager.endTimeout();
+
+                        if (abort) {
+                            session.abortTransaction = true;
+                        }
+                    }
+                }
 
                 session.addDeleteAction((Table) row.getTable(), store, row,
                                         null);
+
+                //write lock does not release until commit
             }
 
             if (restartIdentity && targetTable.identitySequence != null) {

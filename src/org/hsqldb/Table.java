@@ -2647,6 +2647,13 @@ public class Table extends TableBase implements SchemaObject {
 
         Row row = (Row) store.getNewCachedObject(session, data, true);
 
+        //row
+        if(session.database.txManager.isRowLocks() && session.isolationLevel != SessionInterface.TX_SERIALIZABLE){
+            TransactionManager2PLRow txManagerRow = (TransactionManager2PLRow) session.getDatabase().txManager;
+            //no one will lock the new row now so lock it
+            txManagerRow.lockRowTPL(session, row.getId(), session.sessionContext.currentStatement, 1);
+        }
+
         session.addInsertAction(this, store, row, changedCols);
 
         return row;

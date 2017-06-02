@@ -1331,6 +1331,13 @@ public class ParserCommand extends ParserDDL {
 
                         mode = TransactionManager.LOCKS;
                         break;
+
+                    //row
+                    case Tokens.ROWLOCKS :
+                        read();
+
+                        mode = TransactionManager.ROWLOCKS;
+                        break;
                 }
 
                 HsqlName[] names =

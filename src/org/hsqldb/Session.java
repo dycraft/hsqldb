@@ -80,7 +80,8 @@ import org.hsqldb.types.Type.TypedComparator;
  * @since 1.7.0
  */
 public class Session implements SessionInterface {
-
+    //for timeout
+    int cmdTimeout;
     //
     private volatile boolean isClosed;
 
@@ -110,7 +111,13 @@ public class Session implements SessionInterface {
     volatile boolean        tempUnlocked;
     public OrderedHashSet   waitedSessions;
     public OrderedHashSet   waitingSessions;
+
+    //row
+    public OrderedHashSet waitingSessionsRow;
+    public OrderedHashSet waitingSessionsRowType;
+
     OrderedHashSet          tempSet;
+
     public CountUpDownLatch latch = new CountUpDownLatch();
     Statement               lockStatement;
     TimeoutManager          timeoutManager;
@@ -170,7 +177,12 @@ public class Session implements SessionInterface {
         rowActionList               = new HsqlArrayList(32, true);
         waitedSessions              = new OrderedHashSet();
         waitingSessions             = new OrderedHashSet();
+        //row
+        waitingSessionsRow          = new OrderedHashSet();
+        waitingSessionsRowType      = new OrderedHashSet();
+
         tempSet                     = new OrderedHashSet();
+
         isolationLevelDefault       = database.defaultIsolationLevel;
         ignoreCase                  = database.sqlIgnoreCase;
         isolationLevel              = isolationLevelDefault;
@@ -1350,7 +1362,7 @@ public class Session implements SessionInterface {
 
             //        tempActionHistory.add("sql execute " + cs.sql + " " + actionTimestamp + " " + rowActionList.size());
             sessionContext.setDynamicArguments(pvals);
-
+            cmdTimeout = timeout;
             r = cs.execute(this);
 
             if (database.logger.getSqlEventLogLevel()
