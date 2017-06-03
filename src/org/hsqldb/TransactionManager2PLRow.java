@@ -577,8 +577,8 @@ implements TransactionManager {
 
         for (int i = 0; i < waitingCount; i++) {
             Session current = (Session) session.waitingSessions.get(i);
-            long rowId = (long) session.waitingSessionsRow.get(i);
-            int rowType = (int) session.waitingSessionsRowType.get(i);
+            long rowId = ((Integer) session.waitingSessionsRow.get(i)).longValue();
+            int rowType = ((Integer) session.waitingSessionsRowType.get(i)).intValue();
 
             current.tempUnlocked = false;
 
@@ -601,8 +601,8 @@ implements TransactionManager {
 
         for (int i = 0; i < waitingCount; i++) {
             Session current = (Session) session.waitingSessions.get(i);
-            long rowId = (long) session.waitingSessionsRow.get(i);
-            int rowType = (int) session.waitingSessionsRowType.get(i);
+            long rowId = ((Integer) session.waitingSessionsRow.get(i)).longValue();
+            int rowType = ((Integer) session.waitingSessionsRowType.get(i)).intValue();
 
             if (current.tempUnlocked) {
 
@@ -625,8 +625,8 @@ implements TransactionManager {
 
         for (int i = 0; i < waitingCount; i++) {
             Session current = (Session) session.waitingSessions.get(i);
-            long rowId = (long) session.waitingSessionsRow.get(i);
-            int rowType = (int) session.waitingSessionsRowType.get(i);
+            long rowId = ((Integer) session.waitingSessionsRow.get(i)).longValue();
+            int rowType = ((Integer) session.waitingSessionsRowType.get(i)).intValue();
 /*
             if (!current.abortTransaction && current.tempSet.isEmpty()) {
 
@@ -667,8 +667,8 @@ implements TransactionManager {
         for (int i = 0; i < waitingCount; i++) {
             Session current = (Session) session.tempSet.get(i);
             //row
-            long rowId = (long) tempRow.get(i);
-            int rowType = (int) tempRowType.get(i);
+            long rowId = ((Integer) tempRow.get(i)).longValue();
+            int rowType = ((Integer) tempRowType.get(i)).intValue();
 
 
             if (!current.abortTransaction && current.tempSet.isEmpty()) {
