@@ -352,7 +352,7 @@ public class HsqlDatabaseProperties extends HsqlProperties {
                                           null));
         dbMeta.put(hsqldb_default_table_type,
                    HsqlProperties.getMeta(hsqldb_default_table_type,
-                                          SQL_PROPERTY, "MEMORY"));
+                                          SQL_PROPERTY, "CACHED"));
 
         // boolean defaults for user defined props
         dbMeta.put(hsqldb_tx_conflict_rollback,

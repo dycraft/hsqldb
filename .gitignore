@@ -56,3 +56,4 @@ IgnoreLexer.java~
 *.log
 *.properties
 *.script
+*.lck

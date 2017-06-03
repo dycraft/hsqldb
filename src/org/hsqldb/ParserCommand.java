@@ -462,9 +462,30 @@ public class ParserCommand extends ParserDDL {
 
                     case Tokens.READ :
                         read();
-                        readThis(Tokens.COMMITTED);
 
-                        level = SessionInterface.TX_READ_COMMITTED;
+                        switch (token.tokenType) {
+                            case Tokens.UNCOMMITTED :
+                                read();
+
+                                level = SessionInterface.TX_READ_UNCOMMITTED;
+                                break;
+
+                            case Tokens.COMMITTED :
+                                read();
+
+                                level = SessionInterface.TX_READ_COMMITTED;
+                                break;
+
+                            default:
+                                throw unexpectedToken();
+                        }
+                        break;
+
+                    case Tokens.REPEATABLE:
+                        read();
+
+                        readThis(Tokens.READ);
+                        level = SessionInterface.TX_REPEATABLE_READ;
                         break;
 
                     case Tokens.SERIALIZABLE :
